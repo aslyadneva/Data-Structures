@@ -12,6 +12,23 @@ class SinglyLinkedList {
     this.length = 0 
   }
 
+  // return the length of the list if we didn't have this.length property updated with each method
+  size () {
+    if (!this.head) {
+      return 0 
+    }
+
+    let current = this.head;
+    let count = 0; 
+
+    while(current) {
+      count++
+      current = current.next
+    }
+
+    return count
+  }
+
   // add an item at the end 
   push(val) {
     let newNode = new Node(val); 
@@ -20,6 +37,7 @@ class SinglyLinkedList {
       this.head = newNode; 
       this.tail = newNode; 
     } else {
+      // when there is one existing node or more 
       // this.tail.next is pointing to the same place in memory as this.head (when there is only one node)
       // therefore, when a second node is added, this.tail.next is actually setting this.head.next's property 
       // any subsequent node additions will set the previous tail's next value NOT the head beacuse now head and tail are not the same value 
@@ -46,6 +64,7 @@ class SinglyLinkedList {
 
       while (current.next) {
         // if the current item has a next property, it means there are more items after it 
+        /*** AS LONG AS CURRENT HAS A NEXT PROPERTY, NEW TAIL WILL ALWAYS BE THE CURRENT AKA ALWAYS ONE STEP BEHIND */
         newTail = current; 
 
         // ******** set current to its next value to continue moving the loop forward  ******
@@ -121,6 +140,160 @@ class SinglyLinkedList {
 
       return current; 
     }    
+  }
+
+  getAt (index) {
+    let idx = 0; 
+    let current = this.head; 
+    while (current) {
+      if (idx === index) {
+        return current
+      }
+      current = current.next; 
+      idx++
+    }
+
+    return null 
+  }
+
+  removeAt (index) {
+    if (!this.head) {
+      return null 
+    }
+    if (index === 0) {
+      this.head = this.head.next;
+      return 
+    }
+
+    let prevNode = getAt(index-1); 
+    if (!prevNode || !prevNode.next) {
+      return 
+    }
+  
+    let nodeToRemove = prevNode.next;
+    let succeedingNode = nodeToRemove.next;
+
+    prevNode.next = succeedingNode
+
+  }
+
+  insertAt (value, index) {
+    let nodeToInsert = new Node(value); 
+    
+    // if the list is empty, add a new head
+    if (!this.head) {
+      this.head = nodeToInsert; 
+      return;
+    }
+
+    // if trying to insert at the beginning of the list 
+    if (index === 0){
+      nodeToInsert.next = this.head; 
+      this.head = nodeToInsert; 
+    }
+
+    let prevNode = getAt(index -1); 
+
+    // if index doesn't exist 
+    if (!prevNode.next) {
+      prevNode.next = nodeToInsert
+    }
+
+    // if index is in the middle 
+    let nodeToBeShifted = getAt(index); 
+
+    nodeToInsert.next = nodeToBeShifted; 
+    prevNode.next = nodeToInsert; 
+
+  }
+
+  getFirst () {
+    if(!this.head) {
+      return null 
+    }
+    return this.head
+  }
+
+  // return the last node in the list (aka the TAIL) if we didn't have a this.tail property 
+  getLast () {
+    if (!this.head) {
+      return null 
+    }
+
+    let current = this.head; 
+
+    // if a current node doesn't have a next property it means its the last node in the list 
+    while (current.next) {
+      current = current.next
+    }
+
+    return current 
+  }
+
+  // clear the entire list 
+  clear () {
+    this.head = null; 
+  }
+
+  // remove the first node from the list 
+  removerFirst () {
+    // if the list is empty, return null
+    if (!this.head) {
+      return null 
+    }
+
+    // if the head doesn't have a next property (aka if it's the only item in the list)
+    // remove the head by setting it to null 
+    if (!this.head.next) {
+      this.head = null
+    }
+
+    //if the head DOES have a next property 
+    // set the head's next property to be this.head
+    if (this.head.next) {
+      this.head = this.head.next 
+    }
+
+    return this; 
+  }
+
+  removeLast () {
+    // if there is nothing in the list, return null
+    if (!this.head) {
+      return null 
+    }
+
+    // if there is only one item in the list, remove the head 
+    if(!this.head.next) {
+      this.head = null
+    }
+
+    // if there are more than 1 nodes in the list 
+    let newTail = this.head; // preceeding element
+    let current = this.head; // current element 
+
+    while (current.next) {
+      newTail = current; 
+      current = current.next; 
+    }
+
+    // cut off the current element from the elemenet preceeding it (aka the newTail)
+    newTail.next = null 
+  }
+
+  insertLast (value) {
+
+    let nodeToInsert = new Node(value); 
+
+    if (!this.head) {
+      this.head = nodeToInsert; 
+    }
+
+    let current = this.head; 
+    while (current) {
+      current = current.next
+    }
+    current.next = nodeToInsert;
   }
 
   set (index, value) {
