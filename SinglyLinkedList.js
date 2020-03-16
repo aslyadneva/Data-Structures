@@ -190,21 +190,22 @@ class SinglyLinkedList {
     if (index === 0){
       nodeToInsert.next = this.head; 
       this.head = nodeToInsert; 
+      return;
     }
 
-    let prevNode = getAt(index -1); 
+    
+    let prevNode = getAt(index -1) || this.getLast(); 
+    let nodeToBeShifted = prevNode.next;  
 
-    // if index doesn't exist 
-    if (!prevNode.next) {
+    // if previous node is the last in the list, insert the new node at the end of the list
+    // set the new node as the next property of the prevNode  
+    if (!nodeToBeShifted) {
       prevNode.next = nodeToInsert
+      return 
     }
-
-    // if index is in the middle 
-    let nodeToBeShifted = getAt(index); 
 
     nodeToInsert.next = nodeToBeShifted; 
     prevNode.next = nodeToInsert; 
-
   }
 
   getFirst () {
@@ -358,6 +359,27 @@ class SinglyLinkedList {
 
     this.length --; 
     return nodeToRemove; 
+  }
+
+  forEach (fn) {
+    let node = this.head; 
+    let counter = 0;
+
+    while (node) {
+      // while there is a node present in the list, call the passed in function with that node
+      // so bacically for each node in the list, we are executing some functioon
+      fn(node, counter)
+      node = node.next; 
+      counter ++
+    }
+  }
+
+  *[Symbol.iterator] () {
+    let node = this.head; 
+    while (node) {
+      yield node 
+      node = node.next;
+    }
   }
 
 }
