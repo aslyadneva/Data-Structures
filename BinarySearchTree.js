@@ -42,6 +42,7 @@ class BinarySearchTree {
           }
         }
       }
+
     }
   }
 
@@ -94,4 +95,26 @@ class BinarySearchTree {
 
     return data
   }
+
+  // recursive
+  validate (node, min = null, max = null) {
+
+    if (!node) {
+      return false 
+    }
+
+    if (min && node.data < min) {
+      return false 
+    }
+
+    if (mac && node.data > max) {
+      return false 
+    }
+
+    return (
+      this.validate(node.left, min, node.data) && this.validate(node.right, node.data, max)
+    );
+  }
+
+
 }
